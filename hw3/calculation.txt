@@ -1,0 +1,60 @@
+MAE 459 | HOMEWORK 3, PROBLEM 3
+Fixed nozzle; ideal-gas, constant-gamma, isentropic attached flow.
+All pressures absolute. Altitude h is in meters in all equations.
+
+GIVEN
+Pc = 200 atm x 101325 Pa/atm = 20,265,000 Pa
+mdot = 550 kg/s; At = 0.08 m^2; gamma = 1.15; R = 605 J/(kg K)
+h_design = 6700 m; H = 8013.2 m; g0 = 9.80665 m/s^2; k = 2.75
+
+1. DESIGN EXIT PRESSURE
+Pa(h) = 101325 exp(-h/8013.2) Pa
+Pe = Pa(6700) = 101325 exp(-6700/8013.2) = 43,913.103958 Pa
+
+2. EXIT MACH NUMBER
+Me = sqrt{2/(gamma-1) [(Pc/Pe)^((gamma-1)/gamma) - 1]}
+   = sqrt{2/0.15 [(20265000/43913.103958)^(0.15/1.15) - 1]}
+Me = 4.04287283
+
+3. FIXED NOZZLE AREA
+epsilon = (1/Me) [2/(gamma+1) (1+(gamma-1)Me^2/2)]^((gamma+1)/(2(gamma-1)))
+epsilon = 45.56373561; Ae = epsilon x 0.08 = 3.64509885 m^2
+
+4. SUMMERFIELD CHECK
+Separation condition: Pa > 2.75 Pe = 120,761.036 Pa
+Maximum Pa = 101,325 Pa < 120,761.036 Pa: no separation in 0-100 km.
+h_sep = 6700 - 8013.2 ln(2.75) = -1406.160 m (outside requested range).
+Keep Pe and Ae fixed. Do not apply Pe_eff = Pa/2.75 in this range.
+
+5. THRUST COEFFICIENT
+CF_momentum = sqrt{[2 gamma^2/(gamma-1)] [2/(gamma+1)]^((gamma+1)/(gamma-1))
+                   x [1-(Pe/Pc)^((gamma-1)/gamma)]}
+CF_momentum = 1.855858470
+CF_vac = CF_momentum + epsilon Pe/Pc = 1.954592497
+CF(h) = 1.954592497 - 0.227818678 exp(-h/8013.2)
+
+6. THRUST AND SPECIFIC IMPULSE
+F(h) = Pc At CF(h) = 1,621,200 CF(h) N
+Isp(h) = F(h)/(mdot g0) = F(h)/5393.657500 s
+Equivalent: c* = Pc At/mdot = 2947.636364 m/s; Isp = CF c*/g0.
+
+RESULTS
+     h (m)       Pa (Pa)           CF            F (N)      Isp (s)
+         0  101325.00000    1.7267738     2,799,445.71     519.0255
+      6700   43913.10396    1.8558585     3,008,717.75     557.8251
+     10000   29089.93607    1.8891868     3,062,749.66     567.8428
+     20000    8351.58530    1.9358148     3,138,343.00     581.8580
+     40000     688.36888    1.9530448     3,166,276.18     587.0369
+     60000      56.73794    1.9544649     3,168,578.54     587.4638
+    100000       0.38546    1.9545916     3,168,783.95     587.5019
+    vacuum       0.00000    1.9545925     3,168,785.36     587.5021
+
+CHECKS AND INTERPRETATION
+Verified F = mdot ue + (Pe-Pa)Ae independently at every plotted altitude.
+Inferred ideal-model Tc = 5857.37 K; ue = 5470.396 m/s.
+Tc is a consistency check, not a required input or a real-SSME measurement.
+Below 6.7 km: overexpanded but attached. At 6.7 km: ideally expanded.
+Above 6.7 km: underexpanded. Falling ambient pressure increases pressure thrust.
+100 km is approximately vacuum; the exponential model does not give exactly zero Pa.
+
+Course references: Lecture 9 slides 7, 9, 13-14; Lecture 11 slides 37-38.
